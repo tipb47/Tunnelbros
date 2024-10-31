@@ -114,12 +114,14 @@ public class PlayerController : MonoBehaviour
 
     void Jump()
     {
+        SoundEffects.instance.PlaySound(SoundEffects.instance.jumpSound);
         // apply upward force, enable jump animation
         rb.velocity = new Vector2(rb.velocity.x, jumpForce);
     }
 
     void DoubleJump()
     {
+        SoundEffects.instance.PlaySound(SoundEffects.instance.jumpSound);
         // Apply upward force for double jump
         rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         hasDoubleJumped = true;  // Mark double jump as used
@@ -173,10 +175,12 @@ public class PlayerController : MonoBehaviour
     void Punch()
     {
         animator.SetTrigger("Punch");
+        SoundEffects.instance.PlaySound(SoundEffects.instance.punchSound);
     }
 
     public void TakeDamage(float damage)
     {
+        SoundEffects.instance.PlaySound(SoundEffects.instance.damageSound);
         if (hasShield)
         {
             shieldAmount -= damage;

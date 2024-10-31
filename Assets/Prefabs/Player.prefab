@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 74735525157381144}
   - component: {fileID: 3763676230468274720}
   - component: {fileID: 1319103548166453748}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -192,7 +192,6 @@ MonoBehaviour:
     m_Bits: 64
   groundCheck: {fileID: 8967577573027350948}
   groundCheckRadius: 0.2
-  punchPrefab: {fileID: 0}
 --- !u!1 &6464283002158861077
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,7 +201,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8967577573027350948}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: groundCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -236,7 +235,7 @@ GameObject:
   - component: {fileID: 8334050982815915864}
   - component: {fileID: 4337988144464884008}
   - component: {fileID: 7408127837065752730}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
