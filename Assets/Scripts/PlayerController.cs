@@ -92,7 +92,6 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Fire1") && canPunch)
         {
             Punch();
-            TakeDamage(10f);
         }
     }
 
