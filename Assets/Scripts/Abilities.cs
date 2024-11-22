@@ -18,7 +18,7 @@ public class Abilities : MonoBehaviour
     {
         playerController = PlayerController.instance;
 
-        // Check the type of ability
+        // type of ability
         switch (gameObject.tag)
         {
             case "DoubleJump":

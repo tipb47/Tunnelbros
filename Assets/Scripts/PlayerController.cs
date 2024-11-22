@@ -69,34 +69,34 @@ public class PlayerController : MonoBehaviour
     {
         //Debug.Log($"Player Position: {transform.position}, AttackPoint Position: {attackPoint.transform.position}");
 
-        // Check if the player is grounded
+        // check if the player is grounded first
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
 
-        // Reset double jump when player lands
+
         if (isGrounded)
         {
-            hasDoubleJumped = false;  // Allows double jump to reset on landing
+            hasDoubleJumped = false;
             animator.SetBool("isJumping", false);
         }
 
-        // Horizontal movement
+        // movement
         float horizontalInput = Input.GetAxis("Horizontal");
         Move(horizontalInput);
 
-        // Jump logic
+        // jump logic
         if (Input.GetButtonDown("Jump"))
         {
             if (isGrounded)
             {
-                Jump();  // Normal jump
+                Jump();
             }
             else if (doubleJumpEnabled && !hasDoubleJumped)
             {
-                DoubleJump();  // Double jump
+                DoubleJump();
             }
         }
 
-        // Punch input
+        // punch
         if (Input.GetButtonDown("Fire1") && canPunch)
         {
             Punch();
@@ -113,7 +113,7 @@ public class PlayerController : MonoBehaviour
     {
         rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
         animator.SetFloat("xVelocity", Mathf.Abs(rb.velocity.x));
-        // Flip if moving to the left
+
         if (moveInput > 0 && !isFacingRight)
         {
             Flip();
@@ -142,13 +142,11 @@ public class PlayerController : MonoBehaviour
 
     void Flip()
     {
-        // Flip direction of sprite animations
+        // flip sprite
         isFacingRight = !isFacingRight;
         Vector3 localScale = transform.localScale;
         localScale.x *= -1;
         transform.localScale = localScale;
-
-        // Automatically flips the attackPoint due to parent-child relationship
     }
 
     public void ActivateDoubleJump()
@@ -177,7 +175,7 @@ public class PlayerController : MonoBehaviour
         animator.SetTrigger("isPunching");
         SoundEffects.instance.PlaySound(SoundEffects.instance.punchSound);
 
-        // Check for colliders within the radius of the attackPoint
+        // check for colliders within the radius of the attackPoint
         Collider2D[] hits = Physics2D.OverlapCircleAll(attackPoint.transform.position, attackRadius, attackLayers);
 
         foreach (Collider2D hit in hits)
@@ -185,7 +183,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log($"Hit object: {hit.name}");
             if (hit.CompareTag("Enemy") || hit.CompareTag("Box"))
             {
-                Destroy(hit.gameObject); // Destroy the enemy or box
+                Destroy(hit.gameObject); // destroy enemy/box
                 Debug.Log($"{hit.tag} punched!");
             }
         }

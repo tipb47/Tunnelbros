@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    // Singleton instance
+    // singleton
     public static GameManager Instance { get; private set; }
 
     private GameObject gameOverUI;
@@ -14,15 +14,14 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        // Implement Singleton pattern
         if (Instance != null && Instance != this)
         {
-            Destroy(gameObject); // Destroy duplicate GameManager instances
+            Destroy(gameObject);
         }
         else
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // Persist across scenes
+            DontDestroyOnLoad(gameObject);
         }
     }
 
@@ -32,15 +31,14 @@ public class GameManager : MonoBehaviour
         if (punchDoor != null) { punchDoor.SetActive(false); }
     }
 
+	// attempting to combat some of the issues with UI not hiding after restart with these
     private void OnEnable()
     {
-        // Subscribe to the sceneLoaded event
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void OnDisable()
     {
-        // Unsubscribe from the sceneLoaded event
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
@@ -48,19 +46,17 @@ public class GameManager : MonoBehaviour
     {
         HideAbilityDoors();
 
-        // Reset game state variables
         isGameOver = false;
         Time.timeScale = 1;
 
-        // Dynamically find the GameOverUI in the scene
+		//dynamically find new UI
         gameOverUI = GameObject.Find("GameOverUI");
         if (gameOverUI != null)
         {
-            // Ensure the Game Over UI is hidden at the start
             CanvasGroup canvasGroup = gameOverUI.GetComponent<CanvasGroup>();
             if (canvasGroup != null)
             {
-                canvasGroup.alpha = 0; // Make UI invisible
+                canvasGroup.alpha = 0; // hide via alpha
             }
             else
             {
@@ -81,12 +77,11 @@ public class GameManager : MonoBehaviour
         {
             isGameOver = true;
 
-            // Pause the game
             Time.timeScale = 0;
 
             if (gameOverUI != null)
             {
-                // Show the Game Over UI
+
                 CanvasGroup canvasGroup = gameOverUI.GetComponent<CanvasGroup>();
                 if (canvasGroup != null)
                 {
@@ -106,7 +101,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        // Check for left-click input to restart the game
+
         if (isGameOver && Input.GetMouseButtonDown(0))
         {
             RestartGame();
@@ -115,17 +110,17 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()
     {
-        // Resume the game
+
         Time.timeScale = 1;
         isGameOver = false;
 
-        // Hide the Game Over UI
+
         if (gameOverUI != null)
         {
             CanvasGroup canvasGroup = gameOverUI.GetComponent<CanvasGroup>();
             if (canvasGroup != null)
             {
-                canvasGroup.alpha = 0; // Make UI invisible
+                canvasGroup.alpha = 0;
             }
             else
             {
@@ -137,7 +132,7 @@ public class GameManager : MonoBehaviour
             Debug.LogWarning("GameOverUI not found when RestartGame was called.");
         }
 
-        // Reload the current scene
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

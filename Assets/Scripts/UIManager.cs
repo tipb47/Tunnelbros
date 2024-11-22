@@ -17,11 +17,11 @@ public class UIManager : MonoBehaviour
         {
             healthBar.enabled = true;
             shieldBar.enabled = false;
-            manager = this;  // Assign this as the singleton instance
+            manager = this;  // singleton
         }
         else
         {
-            Destroy(gameObject);  // Ensure only one instance exists
+            Destroy(gameObject);
         }
     }
 

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class EndDoor : MonoBehaviour
 {
-    // Called when another collider enters the trigger collider attached to the door
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // Check if the colliding object has the tag "Player"

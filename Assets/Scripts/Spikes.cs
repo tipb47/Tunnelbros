@@ -9,6 +9,7 @@ public class Spikes : MonoBehaviour
             PlayerController player = other.GetComponent<PlayerController>();
             if (player != null)
             {
+				#fatal dose
                 player.TakeDamage(1000);
             }
         }

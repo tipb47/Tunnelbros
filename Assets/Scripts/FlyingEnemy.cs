@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class FlyingEnemy : MonoBehaviour
 {
-    public float moveSpeed = 2f; // Speed of vertical movement
-    public float moveDistance = 10f; // Distance the enemy travels up and down
+    public float moveSpeed = 2f; // vertical movement
+    public float moveDistance = 10f; // distance up and down
 
     private AudioSource audioSource;
     public AudioClip stompSound;
@@ -20,7 +20,6 @@ public class FlyingEnemy : MonoBehaviour
 
     void Update()
     {
-        // Move the enemy up and down
         if (movingUp)
         {
             transform.position += Vector3.up * moveSpeed * Time.deltaTime;
@@ -43,25 +42,24 @@ public class FlyingEnemy : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            // Get the collision point
             Vector2 contactPoint = collision.GetContact(0).point;
             Vector2 enemyCenter = transform.position;
 
-            // Check if the collision point is above the enemy's center
+            // check if above head
             if (contactPoint.y > enemyCenter.y + 0.175f) // threshold for 'head'
             {
-                // Make the player bounce
+                // if so lets bounce!
                 Rigidbody2D playerRb = collision.gameObject.GetComponent<Rigidbody2D>();
                 if (playerRb != null)
                 {
-                    playerRb.velocity = new Vector2(playerRb.velocity.x, 10f); // Adjust bounce height as needed
+                    playerRb.velocity = new Vector2(playerRb.velocity.x, 10f);
                 }
 
-                Die();  // Enemy dies if stepped on
+                Die();
             }
             else
             {
-                // Deal damage to the player
+                // else it was a take damage situation
                 PlayerController playerController = collision.gameObject.GetComponent<PlayerController>();
                 if (playerController != null)
                 {

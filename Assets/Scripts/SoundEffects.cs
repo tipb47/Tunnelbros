@@ -16,7 +16,7 @@ public class SoundEffects : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject); // Keeps audio manager persistent across scenes
+            DontDestroyOnLoad(gameObject); // keeps persistent
             audioSource = GetComponent<AudioSource>();
         }
         else

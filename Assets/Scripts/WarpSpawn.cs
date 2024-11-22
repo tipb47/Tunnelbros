@@ -2,14 +2,13 @@ using UnityEngine;
 
 public class WarpSpawn : MonoBehaviour
 {
-    public Vector3 warpTarget; // Target position to warp the player
+    public Vector3 warpTarget;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Check if the colliding object is the player
+        // check if the player hit the door
         if (other.CompareTag("Player"))
         {
-            // Warp the player to the target position
             other.transform.position = warpTarget;
         }
     }
