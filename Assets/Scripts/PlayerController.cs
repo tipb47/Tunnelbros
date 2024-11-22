@@ -8,11 +8,12 @@ public class PlayerController : MonoBehaviour
     //variables
     public float moveSpeed = 5f;
     private bool isFacingRight = true;
+    private float horizontalInput;
 
     //hp
     private Image healthBar;
     private Image shieldBar;
-    private float healthAmount = 100f;
+    public float healthAmount = 100f;
     private bool isDead = false;
 
     //components
@@ -33,10 +34,14 @@ public class PlayerController : MonoBehaviour
     private bool hasShield = false;
     private bool canPunch = false;
     private float shieldAmount = 100f;
-    private GameObject punchPrefab;
 
     public static PlayerController instance;
     private UIManager manager;
+
+    public GameObject attackPoint;
+    public float attackRadius = 5f; // Radius around the attackPoint
+    public LayerMask attackLayers;   // Layers to check for punch targets
+    private Vector3 attackPointOffset; // Relative position of attackPoint
 
     void Awake()
     {
@@ -57,10 +62,13 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         manager = UIManager.manager;
 
+        attackPointOffset = attackPoint.transform.localPosition;
     }
 
     void Update()
     {
+        //Debug.Log($"Player Position: {transform.position}, AttackPoint Position: {attackPoint.transform.position}");
+
         // Check if the player is grounded
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
 
@@ -68,12 +76,12 @@ public class PlayerController : MonoBehaviour
         if (isGrounded)
         {
             hasDoubleJumped = false;  // Allows double jump to reset on landing
+            animator.SetBool("isJumping", false);
         }
 
         // Horizontal movement
-        float moveInput = Input.GetAxis("Horizontal");
-        Move(moveInput);
-        UpdateAnimation(moveInput);
+        float horizontalInput = Input.GetAxis("Horizontal");
+        Move(horizontalInput);
 
         // Jump logic
         if (Input.GetButtonDown("Jump"))
@@ -93,14 +101,19 @@ public class PlayerController : MonoBehaviour
         {
             Punch();
         }
-    }
 
+
+        if (healthAmount <= 0 && !isDead) {
+            isDead = true;
+            GameManager.Instance.GameOver();
+        }
+    }
 
     void Move(float moveInput)
     {
         rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
-
-        //flip if moving to the left
+        animator.SetFloat("xVelocity", Mathf.Abs(rb.velocity.x));
+        // Flip if moving to the left
         if (moveInput > 0 && !isFacingRight)
         {
             Flip();
@@ -113,41 +126,29 @@ public class PlayerController : MonoBehaviour
 
     void Jump()
     {
+        animator.SetBool("isJumping", true);
         SoundEffects.instance.PlaySound(SoundEffects.instance.jumpSound);
-        // apply upward force, enable jump animation
         rb.velocity = new Vector2(rb.velocity.x, jumpForce);
     }
 
     void DoubleJump()
     {
+        animator.SetBool("isJumping", true);
         SoundEffects.instance.PlaySound(SoundEffects.instance.jumpSound);
-        // Apply upward force for double jump
         rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-        hasDoubleJumped = true;  // Mark double jump as used
+        hasDoubleJumped = true;
         Debug.Log("Double Jump Executed!");
     }
 
-
     void Flip()
     {
-        //flip direction of sprite animations
+        // Flip direction of sprite animations
         isFacingRight = !isFacingRight;
         Vector3 localScale = transform.localScale;
         localScale.x *= -1;
         transform.localScale = localScale;
-    }
 
-    void UpdateAnimation(float moveInput)
-    {
-        //velocity check
-        if (Mathf.Abs(moveInput) > 0.05f)
-        {
-            animator.SetBool("Moving", true);
-        }
-        else
-        {
-            animator.SetBool("Moving", false);
-        }
+        // Automatically flips the attackPoint due to parent-child relationship
     }
 
     public void ActivateDoubleJump()
@@ -173,9 +174,23 @@ public class PlayerController : MonoBehaviour
 
     void Punch()
     {
-        animator.SetTrigger("Punch");
+        animator.SetTrigger("isPunching");
         SoundEffects.instance.PlaySound(SoundEffects.instance.punchSound);
+
+        // Check for colliders within the radius of the attackPoint
+        Collider2D[] hits = Physics2D.OverlapCircleAll(attackPoint.transform.position, attackRadius, attackLayers);
+
+        foreach (Collider2D hit in hits)
+        {
+            Debug.Log($"Hit object: {hit.name}");
+            if (hit.CompareTag("Enemy") || hit.CompareTag("Box"))
+            {
+                Destroy(hit.gameObject); // Destroy the enemy or box
+                Debug.Log($"{hit.tag} punched!");
+            }
+        }
     }
+
 
     public void TakeDamage(float damage)
     {
@@ -199,8 +214,7 @@ public class PlayerController : MonoBehaviour
 
             if (healthAmount <= 0)
             {
-                isDead = true;
-                Debug.Log("died!");
+                Debug.Log("Player is dead! Triggering Game Over.");
             }
         }
     }

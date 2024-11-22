@@ -7,6 +7,9 @@ TagManager:
   - Punch
   - DoubleJump
   - Shield
+  - WarpSpawn
+  - Enemy
+  - Box
   layers:
   - Default
   - TransparentFX
@@ -15,8 +18,8 @@ TagManager:
   - Water
   - UI
   - Ground
-  - 
-  - 
+  - WarpSpawn
+  - Enemy
   - 
   - 
   - 

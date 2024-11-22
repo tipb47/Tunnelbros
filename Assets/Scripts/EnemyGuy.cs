@@ -29,6 +29,24 @@ public class EnemyGuy : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
+
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        if (sr == null)
+        {
+            Debug.LogError("SpriteRenderer missing on " + gameObject.name);
+        }
+        else if (sr.sprite == null)
+        {
+            Debug.LogError("No sprite assigned to SpriteRenderer on " + gameObject.name);
+        }
+        else if (sr.color.a == 0)
+        {
+            Debug.LogError("Sprite is fully transparent on " + gameObject.name);
+        }
+        else
+        {
+            Debug.Log("Enemy sprite is visible: " + sr.sprite.name);
+        }
     }
 
     void Update()
@@ -55,8 +73,6 @@ public class EnemyGuy : MonoBehaviour
         {
             rb.velocity = new Vector2(-moveSpeed, rb.velocity.y); // left
         }
-
-        UpdateAnimation(rb.velocity.magnitude);
     }
 
     // turn the Goomba around
@@ -66,11 +82,6 @@ public class EnemyGuy : MonoBehaviour
         Vector3 localScale = transform.localScale;
         localScale.x *= -1;  // flip sprite
         transform.localScale = localScale;
-    }
-
-    void UpdateAnimation(float moveInput)
-    {
-        animator.SetBool("isWalking", Mathf.Abs(moveInput) > 0.05f);
     }
 
     void OnCollisionEnter2D(Collision2D collision)

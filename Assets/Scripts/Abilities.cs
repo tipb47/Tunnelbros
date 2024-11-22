@@ -9,14 +9,16 @@ public class Abilities : MonoBehaviour
     public Color shieldColor = Color.green;
     public Color punchColor = Color.red;
 
+    public GameObject doubleJumpDoor; 
+    public GameObject punchDoor;      
+
     private PlayerController playerController;
 
     void Start()
     {
         playerController = PlayerController.instance;
 
-
-        //check the type of ability
+        // Check the type of ability
         switch (gameObject.tag)
         {
             case "DoubleJump":
@@ -35,7 +37,6 @@ public class Abilities : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            //check the type of ability
             switch (gameObject.tag)
             {
                 case "DoubleJump":
@@ -48,7 +49,6 @@ public class Abilities : MonoBehaviour
                     ActivatePunch();
                     break;
             }
-            //destroy afvter use
             Destroy(gameObject);
         }
     }
@@ -56,15 +56,29 @@ public class Abilities : MonoBehaviour
     void ActivateDoubleJump()
     {
         playerController.ActivateDoubleJump();
+        if (doubleJumpDoor != null)
+        {
+            doubleJumpDoor.SetActive(true);
+        }
+
+        NotificationManager.Instance.ShowNotification("Double Jump Ability Acquired!", 3f);
     }
 
     void ActivateShield()
     {
-        playerController.ActivateShield(100f);  //Shield gives 100 extra
+        playerController.ActivateShield(100f);
+
+        NotificationManager.Instance.ShowNotification("Shield Ability Acquired!", 3f);
     }
 
     void ActivatePunch()
     {
         playerController.ActivatePunch();
+        if (punchDoor != null)
+        {
+            punchDoor.SetActive(true);
+        }
+
+        NotificationManager.Instance.ShowNotification("Punch Ability Acquired! (Left Click)", 3f);
     }
 }
